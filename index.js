@@ -60,12 +60,12 @@
 		// Public Key on purpose - don't make me regret this
 		const apiEndpoint = 'https://api.spotify.com/v1'
 		const authEndpoint = 'https://accounts.spotify.com/api/token'
-		const clientId = '3f974573800a4ff5b325de9795b8e603'
-		const clientSecret = 'ff188d2860ff44baa57acc79c121a3b9'
+		const clientId = 'aa4894a97e78479d9f966138bac365ff'
+		const clientSecret = '4ada8f256a524c50b929d762d83aa7b4'
 
 		// Create request URL
-		const method = ( opts.album === null ) ? 'artist' : 'album'
-		const queryParams = `?q=${encodeURIComponent( artist )}${method === 'album' ? '%20' + opts.album : ''}&type=${method}&limit=1`
+		const method = 'tracks'
+		const queryParams = `?q=${encodeURIComponent( artist )}&type=${method}&limit=1`
 		const searchUrl = `${apiEndpoint}/search${queryParams}`
 		const authString = `${clientId}:${clientSecret}`
 
