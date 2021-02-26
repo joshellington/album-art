@@ -64,7 +64,7 @@
 		const clientSecret = '4ada8f256a524c50b929d762d83aa7b4'
 
 		// Create request URL
-		const method = 'tracks'
+		const method = 'track'
 		const queryParams = `?q=${encodeURIComponent( artist )}&type=${method}&limit=1`
 		const searchUrl = `${apiEndpoint}/search${queryParams}`
 		const authString = `${clientId}:${clientSecret}`
