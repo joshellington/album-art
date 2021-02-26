@@ -21,10 +21,10 @@
 
 } )( this, fetch => {
 
-	const albumArt = async ( artist, options, cb ) => {
+	const albumArt = async ( query, options, cb ) => {
 
 		// Massage inputs
-		if ( typeof artist !== 'string' ) {
+		if ( typeof query !== 'string' ) {
 
 			throw new TypeError( 'Expected search query to be a string' )
 
@@ -44,7 +44,7 @@
 		}
 
 		// Default options
-		artist = artist.replace( '&', 'and' )
+		query = query.replace( '&', 'and' )
 		const opts = Object.assign( {
 			album: null,
 			size: null
@@ -64,8 +64,8 @@
 		const clientSecret = '4ada8f256a524c50b929d762d83aa7b4'
 
 		// Create request URL
-		const method = 'track'
-		const queryParams = `?q=${encodeURIComponent( artist )}&type=${method}&limit=1`
+		const methods = 'track,artist'
+		const queryParams = `?q=${encodeURIComponent( query )}&type=${methods}&limit=1`
 		const searchUrl = `${apiEndpoint}/search${queryParams}`
 		const authString = `${clientId}:${clientSecret}`
 
@@ -122,49 +122,15 @@
 
 					}
 
-					if ( !json[method + 's'] || json[method + 's'].items.length === 0 ) {
-
-						// Error
-						return Promise.reject( new Error( 'No results found' ) )
-
+					if (json.tracks.items.length && json.tracks.items[0].album) {
+						return json.tracks.items[0].album.images[0].url
 					}
 
-					// Select image size
-					const images = json[method + 's'].items[0].images
-
-					let smallest = images[0]
-					let largest = images[0]
-
-					for ( const element of images ) {
-
-						if ( parseInt( element.width ) < parseInt( smallest.width ) ) {
-
-							smallest = element
-
-						}
-
-						if ( parseInt( element.width ) > parseInt( largest.width ) ) {
-
-							largest = element
-
-						}
-
+					if (json.artists.items.length && json.artists.items[0].images) {
+						return json.artists.items[0].images[0].url
 					}
 
-					if ( opts.size === SIZES.SMALL ) {
-
-						return smallest.url
-
-					}
-
-					if ( opts.size === SIZES.MEDIUM && images.length > 1 ) {
-
-						return images[1].url
-
-					}
-
-					// Large by default
-					return largest.url
+					return Promise.reject( new Error( 'No results found' ) )
 
 				}
 			)
